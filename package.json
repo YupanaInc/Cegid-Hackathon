@@ -1,0 +1,22 @@
+{
+  "name": "cegid-hackathon",
+  "version": "1.0.0",
+  "description": "",
+  "main": "matching.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YupanaInc/Cegid-Hackathon.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/YupanaInc/Cegid-Hackathon/issues"
+  },
+  "homepage": "https://github.com/YupanaInc/Cegid-Hackathon#readme",
+  "dependencies": {
+    "mongodb": "^3.2.7"
+  }
+}
