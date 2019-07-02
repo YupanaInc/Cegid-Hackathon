@@ -34,8 +34,18 @@ class MailManager {
      * @param {string} address
      * @param {string} emailId
      * @param {string} tag
+     * @return void
      */
-    setTag(address, emailId, tag) {
+    async setTag(address, emailId, tag) {
+        const email =  await this.client.api(`/users/${address}/messages/${emailId}`)
+            .select(["categories"]).get();
+        const tags = email.categories;
+        if (tags.includes(tag)) {
+            return
+        }
+        tags.push(tag);
+        await this.client.api(`/users/${address}/messages/${emailId}`)
+            .patch({"categories": tags})
     }
 }
 
