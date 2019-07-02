@@ -2,10 +2,7 @@
 const MongoClient = require('mongodb').MongoClient;
 const {promisify} = require('util');
 
-const dbName = "hackathon";
-const user = "yupana";
-const password = "hackathon18";
-const domain = "cluster0-uclsa.mongodb.net";
+const {user, password, domain, dbName} = require('../config.js');
 
 const credentials = `mongodb+srv://${user}:${password}@${domain}/${dbName}?retryWrites=true&w=majority`
 

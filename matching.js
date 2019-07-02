@@ -1,7 +1,7 @@
 
 const bankStatement = require('./mock-bank-statement.js');
 
-const intervalSeconds = 15;
+const {intervalSeconds} = require('./config.js');
 
 
 // Schedule task - Every 30 seconds.
