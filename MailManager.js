@@ -56,7 +56,7 @@ class MailManager {
      * @return void
      */
     async removeTag(address, emailId, tag) {
-        const email =  await this.client.api(`/users/${address}/messages/${emailId}`)
+        const email = await this.client.api(`/users/${address}/messages/${emailId}`)
             .select(["categories"]).get();
         const count = email.categories.length;
         const tags = email.categories.filter(c => c !== tag);
@@ -65,6 +65,22 @@ class MailManager {
         }
         await this.client.api(`/users/${address}/messages/${emailId}`)
             .patch({"categories": tags})
+    }
+
+    /**
+     *
+     * @param {string} address
+     * @param {string} subject
+     * @param {string} body
+     * @return void
+     */
+    async sendEmail(address, subject, body) {
+        return await this.client.api(`/users/${address}/sendMail`)
+            .post({ message: {
+                subject,
+                body:{contentType:"html", content: body},
+                toRecipients:[{emailAddress: {address}}]
+            }})
     }
 }
 
