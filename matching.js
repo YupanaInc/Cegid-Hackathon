@@ -7,78 +7,82 @@ const {categoryPurchase, categoryMatched, emailAccount, intervalSeconds} = requi
 // Schedule task - Every 30 seconds.
 
 async function run() {
-    console.log('Start the matching.');
+    try {
+        console.log('Start the matching.');
 
-    // Get pending bank statement lines.
+        // Get pending bank statement lines.
 
-    const bankEntries = bankStatement.getBankEntries();
-    console.log(`* Found bank entries : ${bankEntries.length}`);
+        const bankEntries = bankStatement.getBankEntries();
+        console.log(`* Found bank entries : ${bankEntries.length}`);
 
-    // Get pending documents (type = purchase) from email.
+        // Get pending documents (type = purchase) from email.
 
-    const emailsOffice = await mailManager.getEmails(emailAccount);
-    const pendingDocumentsFromOffice = emailsOffice.filter((currentEmail) => {
-        return currentEmail.categories.includes(categoryPurchase) && !currentEmail.categories.includes(categoryMatched);
-    }).map((currentEmail) => {
-        return {
-            emailId: currentEmail.id
-        };
-    });
-
-    // Get known documents from MongoDB.
-
-    const matchCollection = await require('./category/mongodbConnect.js').getMatchersCollection();
-    const matchArray = await matchCollection.find().toArray();
-
-    pendingDocumentsFromOffice.forEach((currentEmail) => {
-        const foundMatch = matchArray.find((currentMatch) => {
-            return currentMatch.emailId === currentEmail.emailId;
-        })
-
-        if (foundMatch) {
-            currentEmail.date = foundMatch.date;
-            currentEmail.label = foundMatch.label;
-            currentEmail.amount = foundMatch.amount;
-        }
-    });
-
-    console.log(`* Found documents (from emails) : ${pendingDocumentsFromOffice.length}`);
-
-    // Simple matching (1 to 1) between documents and bank entries.
-
-    const foundMatch = [];
-
-    bankEntries.forEach((currentEntry) => {
-        const matchingDocument = pendingDocumentsFromOffice.find((currentDocument) => {
-            if (foundMatch.includes((currentMatch) => {
-                return currentMatch.emailId === currentDocument.emailId;
-            })) {
-                return false;
-            }
-
-            return currentDocument.amount === currentEntry.amount;
+        const emailsOffice = await mailManager.getEmails(emailAccount);
+        const pendingDocumentsFromOffice = emailsOffice.filter((currentEmail) => {
+            return currentEmail.categories.includes(categoryPurchase) && !currentEmail.categories.includes(categoryMatched);
+        }).map((currentEmail) => {
+            return {
+                emailId: currentEmail.id
+            };
         });
 
-        if (matchingDocument) {
-            foundMatch.push({
-                emailId: matchingDocument.emailId,
-                transactionId: currentEntry.transactionId
+        // Get known documents from MongoDB.
+
+        const matchCollection = await require('./category/mongodbConnect.js').getMatchersCollection();
+        const matchArray = await matchCollection.find().toArray();
+
+        pendingDocumentsFromOffice.forEach((currentEmail) => {
+            const foundMatch = matchArray.find((currentMatch) => {
+                return currentMatch.emailId === currentEmail.emailId;
+            })
+
+            if (foundMatch) {
+                currentEmail.date = foundMatch.date;
+                currentEmail.label = foundMatch.label;
+                currentEmail.amount = foundMatch.amount;
+            }
+        });
+
+        console.log(`* Found documents (from emails) : ${pendingDocumentsFromOffice.length}`);
+
+        // Simple matching (1 to 1) between documents and bank entries.
+
+        const foundMatch = [];
+
+        bankEntries.forEach((currentEntry) => {
+            const matchingDocument = pendingDocumentsFromOffice.find((currentDocument) => {
+                if (foundMatch.includes((currentMatch) => {
+                    return currentMatch.emailId === currentDocument.emailId;
+                })) {
+                    return false;
+                }
+
+                return currentDocument.amount === currentEntry.amount;
             });
-        }
-    });
 
-    console.log(`* Found matching bank entries : ${foundMatch.length}`);
+            if (matchingDocument) {
+                foundMatch.push({
+                    emailId: matchingDocument.emailId,
+                    transactionId: currentEntry.transactionId
+                });
+            }
+        });
 
-    // Set tags on matched documents.
+        console.log(`* Found matching bank entries : ${foundMatch.length}`);
 
-    pendingDocumentsFromOffice.forEach((currentDocument) => {
-        console.log(`* Add tag ${categoryMatched} to email ${currentDocument.emailId}`);
-        mailManager.setTag(emailAccount, currentDocument.emailId, categoryMatched)
-    });
+        // Set tags on matched documents.
 
-    // Schedule next step.
+        pendingDocumentsFromOffice.forEach((currentDocument) => {
+            console.log(`* Add tag ${categoryMatched} to email ${currentDocument.emailId}`);
+            mailManager.setTag(emailAccount, currentDocument.emailId, categoryMatched)
+        });
 
-    setTimeout(run, intervalSeconds * 1000);
+        // Schedule next step.
+
+        setTimeout(run, intervalSeconds * 1000);
+    } catch (e) {
+        console.log(e);
+    }
 }
 
 run();
