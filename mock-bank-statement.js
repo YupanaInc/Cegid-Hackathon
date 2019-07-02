@@ -3,7 +3,7 @@ const mockDataBankStatement = [
     {
         date: new Date(2019, 5, 13),
         label: 'Amazon UK',
-        amount: 178.95
+        amount: 179.00
     },
     {
         date: new Date(2019, 5, 15),
@@ -21,12 +21,12 @@ const mockDataBankStatement = [
         amount: 9.00
     },
     {
-        date: new Date(2019, 5, 19),
+        date: new Date(2019, 6, 2),
         label: 'Ibis Budget - Rueil Malmaison',
-        amount: 123.78
+        amount: 144.58
     }
 ];
 
-
-console.log(mockDataBankStatement);
-
+exports.getBankEntries = () => {
+    return mockDataBankStatement;
+};
