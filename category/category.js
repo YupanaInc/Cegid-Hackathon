@@ -14,23 +14,11 @@ function getTags(documents) {
     })
 }
 
-function createMatchers(_docs, _mailInformations) {
-    return _docs.map((doc, index) => {
-        const {userMail, emailId} = _mailInformations[index];
-        return {
-            userMail,
-            emailId,
-            ...doc
-        }
-    });
-}
-
-
 async function main () {
     console.log("starting main");
     const mails = await fetchMails();
-    const mailsOfInterest = mails.filter(({categories}) => {
-        return categories && !categories.length;// get mails of interest
+    const mailsOfInterest = mails.filter(({categories = []}) => {
+        return !categories.filter(cat => cat !== "Passé en banque").length;
     });
 
     const mailsInfo = await processDocuments(mailsOfInterest);
@@ -38,10 +26,9 @@ async function main () {
     const tagsForMail = getTags(mailsInfo);
     const done = await updateTags(tagsForMail);
     // Flag emails\\
-    if (done) {
+    if (done && mailsInfo.length) {
         const collectionMatchers = await getMatchersCollection();
-        const matchers = createMatchers(mailsInfo, mailsOfInterest)
-        await collectionMatchers.insert(matchers);
+        await collectionMatchers.insert(mailsInfo);
     }
 
     setTimeout(main, intervalSeconds * 1000);
