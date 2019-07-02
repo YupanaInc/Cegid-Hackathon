@@ -1,7 +1,7 @@
 
 const bankStatement = require('./mock-bank-statement.js');
 const mailManager = require('./MailManager.js').MailManager;
-const {intervalSeconds} = require('./config.js');
+const {emailAccount, intervalSeconds} = require('./config.js');
 
 
 
@@ -15,20 +15,16 @@ async function run() {
     const bankEntries = bankStatement.getBankEntries();
     console.log(`* Found bank entries : ${bankEntries.length}`);
 
-    // TODO: get pending documents (type = invoice) from email.
+    // Get pending documents (type = purchase) from email.
 
-
-    console.log(await mailManager.getEmails('dupont@devlooplondon.onmicrosoft.com'));
-
-
-    const pendingDocumentsFromOffice = [
-        {
-            emailId: '5f82996b-b71d-4db9-a68d-e630d6bc18e2'
-        },
-        {
-            emailId: '1f316a89-9d88-45fa-988a-da5e17d7d8e7'
-        }
-    ];
+    const emailsOffice = await mailManager.getEmails(emailAccount);
+    const pendingDocumentsFromOffice = emailsOffice.filter((currentEmail) => {
+        return currentEmail.categories.includes('Purchase');
+    }).map((currentEmail) => {
+        return {
+            emailId: currentEmail.id
+        };
+    });
 
     // Get known documents from MongoDB.
 
@@ -81,6 +77,8 @@ async function run() {
     // TODO: store result of the matching > flags on emails.
 
     console.log(foundMatch)
+
+    // TODO: setTag.
 
 
 

@@ -1,3 +1,4 @@
+
 const Client = require("@microsoft/microsoft-graph-client").Client;
 
 const options = {
