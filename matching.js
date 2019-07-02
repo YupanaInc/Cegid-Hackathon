@@ -6,7 +6,7 @@ const intervalSeconds = 15;
 
 // Schedule task - Every 30 seconds.
 
-function run() {
+async function run() {
     console.log('Start the matching.');
 
     // Get pending bank statement lines.
@@ -28,7 +28,15 @@ function run() {
     ];
 
 
-    // TODO: match.
+    const matchCollection = await require('./category/mongodbConnect.js').getMatchersCollection();
+
+    console.log(await matchCollection.find().toArray())
+
+
+
+    console.log(`* Found documents (from emails) : ${pendingDocumentsWithMetadata.length}`);
+
+    // Simple matching (1 to 1) between documents and bank entries.
 
     const foundMatch = [];
 
@@ -40,12 +48,8 @@ function run() {
                 return false;
             }
 
-            // TODO.
-
             return currentDocument.amount === currentEntry.amount;
         });
-
-        console.log(matchingDocument ? 'YES' : 'NO')
 
         if (matchingDocument) {
             foundMatch.push({
@@ -54,8 +58,7 @@ function run() {
         }
     });
 
-    console.log(foundMatch)
-
+    console.log(`* Found matching bank entries : ${foundMatch.length}`);
 
     // TODO: store result of the matching > flags on emails.
 

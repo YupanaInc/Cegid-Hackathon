@@ -11,10 +11,7 @@
     "url": "git+https://github.com/YupanaInc/Cegid-Hackathon.git"
   },
   "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/YupanaInc/Cegid-Hackathon/issues"
-  },
+  "license": "Cegid",
   "homepage": "https://github.com/YupanaInc/Cegid-Hackathon#readme",
   "dependencies": {
     "mongodb": "^3.2.7"
