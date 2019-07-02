@@ -4,7 +4,7 @@
   "description": "",
   "main": "matching.js",
   "scripts": {
-    "start:ac": "node adaptive-card-server.js"
+    "start:acrl": "node adaptive-card-response-listener.js"
   },
   "repository": {
     "type": "git",
