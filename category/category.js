@@ -1,7 +1,8 @@
 
-const {  connectToMongo,
+const {  
     getPIADocumentsCollection,
-    getMatchersCollection} = require("./mongodbConnect.js")
+    getMatchersCollection
+} = require("./mongodbConnect.js")
 
 // REST POST DOCUMENT FROM PIA => RETURN METADATA // mock
 
@@ -34,7 +35,16 @@ async function main () {
     
     console.log("starting main");
     const collectionDocuments = await getPIADocumentsCollection();
-    console.log()
+    console.log("collection documents");
+    const cursor = await collectionDocuments.find({});
+    const documents = await cursor.toArray();
+    console.log(documents);
+
+    const collectionMatchers = await getMatchersCollection();
+    const cursorMatchers = await collectionMatchers.find({});
+    const matchers = await cursorMatchers.toArray();
+    console.log(matchers);
+
     // const mails = await fetchMails();
 
     // const interestMails = mails.filter((mail) => {
