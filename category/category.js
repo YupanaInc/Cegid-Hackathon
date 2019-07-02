@@ -1,6 +1,6 @@
 
 const {getMatchersCollection} = require("./mongodbConnect.js")
-const {intervalSeconds} = require('../config.js');
+const {categoryMatched, categoryRecorded, intervalSeconds} = require('../config.js');
 const {processDocuments} = require("./mockPIA.js");
 const {fetchMails, updateTags} = require("./updateMails.js");
 
@@ -11,21 +11,24 @@ function getTags(documents) {
             tag: type,
             emailId,
         };
-    })
+    });
 }
 
 async function main () {
-    console.log("starting main");
+    console.log("Starting main");
+
     const mails = await fetchMails();
     const mailsOfInterest = mails.filter(({categories = []}) => {
-        return !categories.filter(cat => cat !== "Passé en banque").length;
+        return !categories.includes(categoryMatched) && !categories.includes(categoryRecorded);
     });
 
     const mailsInfo = await processDocuments(mailsOfInterest);
+
     // Tag documents
     const tagsForMail = getTags(mailsInfo);
     const done = await updateTags(tagsForMail);
-    // Flag emails\\
+
+    // Flag emails
     if (done && mailsInfo.length) {
         const collectionMatchers = await getMatchersCollection();
         await collectionMatchers.insert(mailsInfo);
