@@ -2,7 +2,8 @@ const mailManager = require('../MailManager.js').MailManager;
 const {emailAccount} = require('../config.js');
 
 async function fetchMails() {
-    return await mailManager.getEmails(emailAccount);
+    const result = await mailManager.getEmails(emailAccount);
+    return result.map(res => ({...res, userEmail: emailAccount}));
 }
 
 async function updateTags(mailsInformation) {

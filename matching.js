@@ -72,9 +72,9 @@ async function run() {
 
         // Set tags on matched documents.
 
-        pendingDocumentsFromOffice.forEach((currentDocument) => {
+        pendingDocumentsFromOffice.forEach(async (currentDocument) => {
             console.log(`* Add tag ${categoryMatched} to email ${currentDocument.emailId}`);
-            mailManager.setTag(emailAccount, currentDocument.emailId, categoryMatched)
+            await mailManager.setTag(emailAccount, currentDocument.emailId, categoryMatched)
         });
 
         // Schedule next step.

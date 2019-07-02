@@ -1,6 +1,6 @@
 
 const {getMatchersCollection} = require("./mongodbConnect.js")
-const {intervalSeconds} = require('../config.js');
+const {categoryMatched, categoryRecorded, intervalSeconds} = require('../config.js');
 const {processDocuments} = require("./mockPIA.js");
 const {fetchMails, updateTags} = require("./updateMails.js");
 
@@ -11,37 +11,27 @@ function getTags(documents) {
             tag: type,
             emailId,
         };
-    })
-}
-
-function createMatchers(_docs, _mailInformations) {
-    return _docs.map((doc, index) => {
-        const {userMail, emailId} = _mailInformations[index];
-        return {
-            userMail,
-            emailId,
-            ...doc
-        }
     });
 }
 
-
 async function main () {
-    console.log("starting main");
+    console.log("Starting main");
+
     const mails = await fetchMails();
-    const mailsOfInterest = mails.filter(({categories}) => {
-        return categories && !categories.length;// get mails of interest
+    const mailsOfInterest = mails.filter(({categories = []}) => {
+        return !categories.includes(categoryMatched) && !categories.includes(categoryRecorded);
     });
 
     const mailsInfo = await processDocuments(mailsOfInterest);
+
     // Tag documents
     const tagsForMail = getTags(mailsInfo);
     const done = await updateTags(tagsForMail);
-    // Flag emails\\
-    if (done) {
+
+    // Flag emails
+    if (done && mailsInfo.length) {
         const collectionMatchers = await getMatchersCollection();
-        const matchers = createMatchers(mailsInfo, mailsOfInterest)
-        await collectionMatchers.insert(matchers);
+        await collectionMatchers.insert(mailsInfo);
     }
 
     setTimeout(main, intervalSeconds * 1000);
