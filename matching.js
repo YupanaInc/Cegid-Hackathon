@@ -1,7 +1,8 @@
 
 const bankStatement = require('./mock-bank-statement.js');
-
+const mailManager = require('./MailManager.js').MailManager;
 const {intervalSeconds} = require('./config.js');
+
 
 
 // Schedule task - Every 30 seconds.
@@ -15,6 +16,10 @@ async function run() {
     console.log(`* Found bank entries : ${bankEntries.length}`);
 
     // TODO: get pending documents (type = invoice) from email.
+
+
+    console.log(await mailManager.getEmails('dupont@devlooplondon.onmicrosoft.com'));
+
 
     const pendingDocumentsFromOffice = [
         {
