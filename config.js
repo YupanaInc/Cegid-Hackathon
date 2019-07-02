@@ -1,8 +1,9 @@
 
 exports.emailAccount = 'dupont@devlooplondon.onmicrosoft.com';
 
-exports.categoryPurchase = 'Purchase';
-exports.categoryMatched = 'Matched';
+exports.categoryPurchase = 'Achat';
+exports.categoryMatched = 'Passé en banque';
+exports.categoryRecorded = 'Comptabilisé';
 
 exports.dbName = "hackathon";
 exports.user = "yupana";
