@@ -1,6 +1,9 @@
 
 exports.emailAccount = 'dupont@devlooplondon.onmicrosoft.com';
 
+exports.categoryPurchase = 'Purchase';
+exports.categoryMatched = 'Matched';
+
 exports.dbName = "hackathon";
 exports.user = "yupana";
 exports.password = "hackathon18";

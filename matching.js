@@ -1,8 +1,7 @@
 
 const bankStatement = require('./mock-bank-statement.js');
 const mailManager = require('./MailManager.js').MailManager;
-const {emailAccount, intervalSeconds} = require('./config.js');
-
+const {categoryPurchase, categoryMatched, emailAccount, intervalSeconds} = require('./config.js');
 
 
 // Schedule task - Every 30 seconds.
@@ -19,7 +18,7 @@ async function run() {
 
     const emailsOffice = await mailManager.getEmails(emailAccount);
     const pendingDocumentsFromOffice = emailsOffice.filter((currentEmail) => {
-        return currentEmail.categories.includes('Purchase');
+        return currentEmail.categories.includes(categoryPurchase) && !currentEmail.categories.includes(categoryMatched);
     }).map((currentEmail) => {
         return {
             emailId: currentEmail.id
@@ -42,10 +41,6 @@ async function run() {
             currentEmail.amount = foundMatch.amount;
         }
     });
-
-
-    console.log(pendingDocumentsFromOffice)
-
 
     console.log(`* Found documents (from emails) : ${pendingDocumentsFromOffice.length}`);
 
@@ -74,13 +69,14 @@ async function run() {
 
     console.log(`* Found matching bank entries : ${foundMatch.length}`);
 
-    // TODO: store result of the matching > flags on emails.
+    // Set tags on matched documents.
 
-    console.log(foundMatch)
+    pendingDocumentsFromOffice.forEach((currentDocument) => {
+        console.log(`* Add tag ${categoryMatched} to email ${currentDocument.emailId}`);
+        mailManager.setTag(emailAccount, currentDocument.emailId, categoryMatched)
+    });
 
-    // TODO: setTag.
-
-
+    // Schedule next step.
 
     setTimeout(run, intervalSeconds * 1000);
 }
