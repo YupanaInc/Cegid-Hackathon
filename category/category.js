@@ -32,7 +32,7 @@ async function tagDocuments() {
 
 
 async function main () {
-    
+
     console.log("starting main");
     const collectionDocuments = await getPIADocumentsCollection();
     console.log("collection documents");
@@ -54,9 +54,8 @@ async function main () {
 
     // const documents = await processPIA(interestMails);
 
-    
+
 
 };
-
 
 main();

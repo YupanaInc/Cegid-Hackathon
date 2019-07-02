@@ -4,8 +4,10 @@ const {promisify} = require('util');
 
 const dbName = "hackathon";
 const user = "yupana";
+const password = "hackathon18";
+const domain = "cluster0-uclsa.mongodb.net";
 
-const credentials = `mongodb+srv://${user}:hackathon18@cluster0-uclsa.mongodb.net/${dbName}?retryWrites=true&w=majority`
+const credentials = `mongodb+srv://${user}:${password}@${domain}/${dbName}?retryWrites=true&w=majority`
 
 let connectionPromise = null;
 
