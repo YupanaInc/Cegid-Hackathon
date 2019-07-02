@@ -14,34 +14,46 @@ async function run() {
     const bankEntries = bankStatement.getBankEntries();
     console.log(`* Found bank entries : ${bankEntries.length}`);
 
-    // TODO: get pending documents (type = invoice).
+    // TODO: get pending documents (type = invoice) from email.
 
-    const pendingDocumentsWithMetadata = [
+    const pendingDocumentsFromOffice = [
         {
-            emailId: 1,
-            amount: 179
+            emailId: '5f82996b-b71d-4db9-a68d-e630d6bc18e2'
         },
         {
-            emailId: 2,
-            amount: 54.39
+            emailId: '1f316a89-9d88-45fa-988a-da5e17d7d8e7'
         }
     ];
 
+    // Get known documents from MongoDB.
 
     const matchCollection = await require('./category/mongodbConnect.js').getMatchersCollection();
+    const matchArray = await matchCollection.find().toArray();
 
-    console.log(await matchCollection.find().toArray())
+    pendingDocumentsFromOffice.forEach((currentEmail) => {
+        const foundMatch = matchArray.find((currentMatch) => {
+            return currentMatch.emailId === currentEmail.emailId;
+        })
+
+        if (foundMatch) {
+            currentEmail.date = foundMatch.date;
+            currentEmail.label = foundMatch.label;
+            currentEmail.amount = foundMatch.amount;
+        }
+    });
 
 
+    console.log(pendingDocumentsFromOffice)
 
-    console.log(`* Found documents (from emails) : ${pendingDocumentsWithMetadata.length}`);
+
+    console.log(`* Found documents (from emails) : ${pendingDocumentsFromOffice.length}`);
 
     // Simple matching (1 to 1) between documents and bank entries.
 
     const foundMatch = [];
 
     bankEntries.forEach((currentEntry) => {
-        const matchingDocument = pendingDocumentsWithMetadata.find((currentDocument) => {
+        const matchingDocument = pendingDocumentsFromOffice.find((currentDocument) => {
             if (foundMatch.includes((currentMatch) => {
                 return currentMatch.emailId === currentDocument.emailId;
             })) {
@@ -53,7 +65,8 @@ async function run() {
 
         if (matchingDocument) {
             foundMatch.push({
-
+                emailId: matchingDocument.emailId,
+                transactionId: currentEntry.transactionId
             });
         }
     });
@@ -61,6 +74,9 @@ async function run() {
     console.log(`* Found matching bank entries : ${foundMatch.length}`);
 
     // TODO: store result of the matching > flags on emails.
+
+    console.log(foundMatch)
+
 
 
     setTimeout(run, intervalSeconds * 1000);
