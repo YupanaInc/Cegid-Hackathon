@@ -22,7 +22,7 @@ const mockDataBankStatement = [
         transactionId: '22f8efff-b1ac-418a-b544-ba5f00a58f0c',
         date: new Date(2019, 5, 18),
         label: 'Google Suite Subscription',
-        amount: 9.00
+        amount: 55.08
     },
     {
         transactionId: 'c24758a1-6ff2-4c85-aae4-165d96dff7f7',
