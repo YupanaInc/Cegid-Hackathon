@@ -1,8 +1,6 @@
 
-const {  
-    getPIADocumentsCollection,
-    getMatchersCollection
-} = require("./mongodbConnect.js")
+const {getMatchersCollection} = require("./mongodbConnect.js")
+const {intervalSeconds} = require('../config.js');
 
 // REST POST DOCUMENT FROM PIA => RETURN METADATA // mock
 
@@ -32,13 +30,7 @@ async function tagDocuments() {
 
 
 async function main () {
-    
     console.log("starting main");
-    const collectionDocuments = await getPIADocumentsCollection();
-    console.log("collection documents");
-    const cursor = await collectionDocuments.find({});
-    const documents = await cursor.toArray();
-    console.log(documents);
 
     const collectionMatchers = await getMatchersCollection();
     const cursorMatchers = await collectionMatchers.find({});
@@ -54,9 +46,8 @@ async function main () {
 
     // const documents = await processPIA(interestMails);
 
-    
 
+    setTimeout(main, intervalSeconds * 1000);
 };
-
 
 main();
