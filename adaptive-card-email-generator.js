@@ -154,7 +154,7 @@ function generateEntry(email, index) {
                       "items": [
                           {
                               "type": "TextBlock",
-                              "text": "€${email.amount}",
+                              "text": "${email.amount}",
                               "wrap": true
                           }
                       ],
