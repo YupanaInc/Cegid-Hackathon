@@ -36,11 +36,14 @@ async function main () {
 
     // Flag emails
     if (done && mailsInfo.length) {
+        console.log(`${mailsInfo.length} Mails tagged`);
         const collectionMatchers = await getMatchersCollection();
-        await collectionMatchers.insert(mailsInfo);
+        await collectionMatchers.insertMany(mailsInfo);
     }
 
-    // setTimeout(main, intervalSeconds * 1000);
+    console.log('End category process');
+    process.exit(0)
+
 };
 
 main();

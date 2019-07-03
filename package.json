@@ -4,6 +4,8 @@
   "description": "",
   "main": "matching.js",
   "scripts": {
+    "categorise": "node ./category/category.js",
+    "match": "node matching.js",
     "start:acrl": "node adaptive-card-response-listener.js",
     "send-email": "python send.py -u 'dupont@devlooplondon.onmicrosoft.com' -p 'YupanaUK2719'"
   },
