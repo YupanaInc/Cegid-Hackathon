@@ -12,3 +12,7 @@ exports.password = "hackathon18";
 exports.domain = "cluster0-uclsa.mongodb.net";
 
 exports.intervalSeconds = 15;
+
+exports.adaptiveCardListenerEndpoint = "https://ccfcd0a0.ngrok.io/post";
+
+exports.emailSubject = "SweepDoc - Votre récapitulatif";
