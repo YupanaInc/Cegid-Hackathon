@@ -2,6 +2,7 @@
 exports.emailAccount = 'dupont@devlooplondon.onmicrosoft.com';
 
 exports.categoryPurchase = 'Achat';
+exports.categorySale = 'Vente';
 exports.categoryMatched = 'Passé en banque';
 exports.categoryRecorded = 'Comptabilisé';
 
