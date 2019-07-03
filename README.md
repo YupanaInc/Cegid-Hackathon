@@ -46,6 +46,8 @@ Un simple clic sur un lien suffit pour associer le dossier comptable et la boite
 Une page de ```consent utilisateur``` est présentée pour donner les droits d'accès aux emails.
 
 Out of scope
+-
+
 - Bank'in
 - PIA extractor
 - PIA generator
