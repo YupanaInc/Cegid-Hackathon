@@ -72,14 +72,14 @@ async function run() {
 
         // Set tags on matched documents.
 
-        pendingDocumentsFromOffice.forEach(async (currentDocument) => {
+        const promSetTag = pendingDocumentsFromOffice.map(async (currentDocument) => {
             console.log(`* Add tag ${categoryMatched} to email ${currentDocument.emailId}`);
-            await mailManager.setTag(emailAccount, currentDocument.emailId, categoryMatched)
+            return mailManager.setTag(emailAccount, currentDocument.emailId, categoryMatched)
         });
 
-        // Schedule next step.
-
-        setTimeout(run, intervalSeconds * 1000);
+        await Promise.all(promSetTag);
+        console.log('End category process');
+        process.exit(0)
     } catch (e) {
         console.log(e);
     }
