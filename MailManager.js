@@ -31,7 +31,7 @@ class MailManager {
      */
     async getEmails(address, fromDate, withTags, withoutTags) {
         return (await this.client.api(`/users/${address}/messages`)
-                .select(["sender", "subject", "categories"]).get()
+                .select(["sender", "subject", "categories"]).top(50).get()
         ).value.filter(mes => {
             return (!withTags || withTags.length === 0 || withTags.some(c => mes.categories.includes(c)))
                 && !mes.categories.some(c => (withoutTags || []).includes(c))
