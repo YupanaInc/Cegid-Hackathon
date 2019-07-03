@@ -1,7 +1,7 @@
 
 const bankStatement = require('./mock-bank-statement.js');
 const mailManager = require('./MailManager.js').MailManager;
-const {categoryPurchase, categorySale, categoryMatched, emailAccount, intervalSeconds} = require('./config.js');
+const {categoryPurchase, categoryMatched, emailAccount, intervalSeconds} = require('./config.js');
 
 
 // Schedule task - Every 30 seconds.
@@ -19,7 +19,7 @@ async function run() {
 
         const emailsOffice = await mailManager.getEmails(emailAccount);
         const pendingDocumentsFromOffice = emailsOffice.filter((currentEmail) => {
-            return currentEmail.categories.includes(categorySale) && currentEmail.categories.includes(categoryPurchase) && !currentEmail.categories.includes(categoryMatched);
+            return currentEmail.categories.includes(categoryPurchase) && !currentEmail.categories.includes(categoryMatched);
         }).map((currentEmail) => {
             return {
                 emailId: currentEmail.id
