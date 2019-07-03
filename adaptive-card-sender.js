@@ -61,7 +61,7 @@ async function run() {
 
     mailManager.sendEmail(emailAccount, emailSubject, emailBody);
 
-    setTimeout(run, intervalSeconds * 1000);
+    // setTimeout(run, intervalSeconds * 1000);
 }
 
 run();
